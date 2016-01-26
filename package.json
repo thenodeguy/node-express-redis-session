@@ -1,0 +1,28 @@
+{
+  "name": "node-express-redis-session",
+  "description": "A basic and lean recipe for using Redis to store sessions.",
+  "version": "1.0.0",
+  "author": "benjaminvickers",
+  "license": "ISC",
+  "homepage": "https://github.com/benjaminvickers/node-express-redis-session#readme",
+  "main": "app.js",
+  "scripts": {
+    "setup": "node ./scripts/setup.js",
+    "start": "NODE_ENV=dev node ./bin/www"
+  },
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "ejs": "^2.3.4",
+    "express": "~4.13.1",
+    "mongoose": "^4.3.5",
+    "redis-sessions": "^0.5.3"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benjaminvickers/node-express-redis-session.git"
+  },
+  "bugs": {
+    "url": "https://github.com/benjaminvickers/node-express-redis-session/issues"
+  }
+}
