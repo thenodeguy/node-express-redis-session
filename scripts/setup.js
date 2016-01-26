@@ -14,7 +14,7 @@ var mongoose = require('mongoose');
 var dbConfig = require('../configs/db');
 var Users = require('../models/users');
 
-mongoose.connect(dbConfig["dev"].url);
+mongoose.connect(dbConfig['dev'].url);
 process.on('SIGINT', function() {
   console.log('Closing database connection.');
   mongoose.connection.close();

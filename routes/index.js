@@ -28,23 +28,24 @@ router.post('/login', suppressLoggedInUsers, function(req, res, next) {
   // If this app runs behind a proxy owned by you, then use 'x-forwarded-for'.
   // If not, then it there is a possibility of spoofing, so rely entirely on
   // 'req.connection.remoteAddress'.
-  //var userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+  // var userIP = req.headers['x-forwarded-for']
+  //   || req.connection.remoteAddress;
   var userIP = req.connection.remoteAddress;
 
   var promise = new Promise(function(resolve, reject) {
-    Users.findOne({username: username, password: password}, function(err, user) {
-      if (err) {
-        reject(err);
-        return;
-      }
-      
-      if (!user) {
-        reject(new Error('Username or password incorrect'));
-        return;
-      }
-      
-      resolve(user);
-    });
+    Users.findOne(
+      { username: username, password: password },
+      function(err, user) {
+        if (err) {
+          reject(err);
+          return;
+        }
+        if (!user) {
+          reject(new Error('Username or password incorrect'));
+          return;
+        }
+        resolve(user);
+      });
   })
   .then(function(user) {
   
@@ -56,18 +57,18 @@ router.post('/login', suppressLoggedInUsers, function(req, res, next) {
         id: user._id,
         ip: userIP,
         ttl: redisConfig[process.env.NODE_ENV].redisSessionTTL,
-        d: { username: user.username }
-        },
-        function(err, tokenContainer) {
-          if (err) {
-            reject(err);
-            return;
-          }
+        d: { username: user.username },
+      },
+      function(err, tokenContainer) {
+        if (err) {
+          reject(err);
+          return;
+        }
 
-          // tokenContainer.token should be used to identify the user session 
-          // in Redis. This token should now be set in the cookie.
-          resolve(tokenContainer.token);
-        });
+        // The tokenContainer.token should be used to identify the user 
+        // session in Redis. This token should now be set in the cookie.
+        resolve(tokenContainer.token);
+      });
     });
   })
   .then(function(token) {
@@ -97,7 +98,7 @@ router.get('/logout', forceLogIn, function(req, res, next) {
 
 
 function suppressLoggedInUsers(req, res, next) {
-  if(res.locals.user) {
+  if (res.locals.user) {
     res.redirect('/dashboard');
     return;
   }
@@ -106,7 +107,7 @@ function suppressLoggedInUsers(req, res, next) {
 }
 
 function forceLogIn(req, res, next) {
-  if(res.locals.user) {
+  if (res.locals.user) {
     // User is logged in. Proceed.
     next();
     return;

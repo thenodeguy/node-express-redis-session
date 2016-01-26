@@ -20,7 +20,6 @@ mongoose.connect(dbConfig[process.env.NODE_ENV].url);
 
 // Authentication
 app.use(function(req, res, next) {
-console.log(req.headers.cookie);        // HERE DELETE
 
   // Behaviour for no cookie.
   var cookie = req.headers.cookie;
@@ -47,26 +46,27 @@ console.log(req.headers.cookie);        // HERE DELETE
   // Behaviour for session cookie.
   redisSession.get({
     app: redisConfig[process.env.NODE_ENV].redisNamespace,
-    token: token},
-    function(err, session) {
-      if (err) {
-        res.set('Set-Cookie', 'token=visitor');
-        res.locals.token = 'visitor';
-        res.locals.user = null;
-        next();
-        return;
-      }
-      
-      // Store the token in locals, so we can easily access it later for
-      // accessing the session.
-      res.locals.token = token;
-      
-      // Store the bare user details in locals, for fast access. Any changes to
-      // user data which update the session should also be reflected in this
-      // locals.user object.
-      res.locals.user = session.d;
+    token: token,
+  },
+  function(err, session) {
+    if (err) {
+      res.set('Set-Cookie', 'token=visitor');
+      res.locals.token = 'visitor';
+      res.locals.user = null;
       next();
-    });
+      return;
+    }
+      
+    // Store the token in locals, so we can easily access it later for
+    // accessing the session.
+    res.locals.token = token;
+    
+    // Store the bare user details in locals, for fast access. Any changes to
+    // user data which update the session should also be reflected in this
+    // locals.user object.
+    res.locals.user = session.d;
+    next();
+  });
 });
 
 // Routing configuration

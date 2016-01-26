@@ -2,9 +2,9 @@
 
 module.exports = {
   prod: {
-    url: 'mongodb://localhost:27017/local'
+    url: 'mongodb://localhost:27017/local',
   },
   dev: {
-    url: 'mongodb://localhost:27017/local'
-  }
+    url: 'mongodb://localhost:27017/local',
+  },
 };

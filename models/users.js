@@ -11,7 +11,7 @@ var Users = new mongoose.Schema(
   password: String,
 },
 {
-  collection:"users"
+  collection: 'users',
 });
 
 module.exports = mongoose.model('users', Users);

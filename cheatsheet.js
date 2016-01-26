@@ -3,9 +3,10 @@
 // Cheatsheet for redis-session.
 // https://www.npmjs.com/package/redis-sessions
 
+var util = require('util');
 var RedisSessions = require('redis-sessions');
-var rs = new RedisSessions({ host: '127.0.0.1', port: '6379' });
-var namespace = "nodeexpressauthredis";
+var rs = new RedisSessions({ host: '127.0.0.1', port: '6379', });
+var namespace = 'nodeexpressauthredis';
 
 
 new Promise(function(resolve, reject) {
@@ -16,18 +17,21 @@ new Promise(function(resolve, reject) {
     id: 'user_id_goes_here',
     ip: '127.0.0.1',
     ttl: 3600,
-    d: { username: 'Ann Example' }
+    d: {
+      username: 'Ann Example',
     },
-    function(err, tokenContainer) {
-      if (err) {
-        reject(err);
-        return;
-      }
-      
-      // tokenContainer.token should be used to look up the user session 
-      // in Redis.
-      resolve(tokenContainer.token);
-    });
+  },
+  function(err, tokenContainer) {
+    if (err) {
+      reject(err);
+      return;
+    }
+    
+    // The tokenContainer.token should be used to look up the user session 
+    // in Redis.
+    console.log('1: ' + tokenContainer.token);
+    resolve(tokenContainer.token);
+  });
 })
 .then(function(token) {
 
@@ -35,17 +39,19 @@ new Promise(function(resolve, reject) {
   return new Promise(function(resolve, reject) {
     rs.get({
       app: namespace,
-      token: token},
-      function(err, userSession) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        
-        // userSession references the user session, which we created earlier.
-        // { username: 'Ann Example' }
-        resolve(token);
-      });
+      token: token,
+    },
+    function(err, userSession) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      
+      // The userSession references the newly created user session, e.g:
+      // { username: 'Ann Example' }
+      console.log('2: ' + util.inspect(userSession.d));
+      resolve(token);
+    });
   });
 })
 .then(function(token) {
@@ -56,19 +62,21 @@ new Promise(function(resolve, reject) {
       app: namespace,
       token: token,
       d: {
-        'email': 'root@localhost',
-        'phone': '0123456'
-      }},
-      function(err, userSession) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        
-        // userSession references the updated user session.
-        // { username: 'Ann Example', email: 'root@localhost', phone: '0123456'}
-        resolve(token);
-      });
+        email: 'root@localhost',
+        phone: '0123456',
+      },
+    },
+    function(err, userSession) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      
+      // The userSession references the updated user session.
+      // { username: 'Ann Example', email: 'root@localhost', phone: '0123456'}
+      console.log('3: ' + util.inspect(userSession.d));
+      resolve(token);
+    });
   });
 })
 .then(function(token) {
@@ -79,18 +87,20 @@ new Promise(function(resolve, reject) {
       app: namespace,
       token: token,
       d: {
-        "phone": null
-      }},
-      function(err, userSession) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        
-        // userSession references the updated user session.
-        // { username: 'Ann Example', email: 'root@localhost'}
-        resolve(token);
-      });
+        phone: null,
+      },
+    },
+    function(err, userSession) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      
+      // The userSession references the updated user session.
+      // { username: 'Ann Example', email: 'root@localhost'}
+      console.log('4: ' + util.inspect(userSession.d));
+      resolve(token);
+    });
   });
 })
 .then(function(token) {
@@ -99,18 +109,24 @@ new Promise(function(resolve, reject) {
   return new Promise(function(resolve, reject) {    
     rs.kill({
       app: namespace,
-      token: token},
-      function(err, result) {
-        if (err) {
-          reject(err);
-          return;
-        }
-        
-        // Result indicates whether the session was killed:
-        // { kill: 1 }
-        resolve();
-      });
+      token: token,
+    },
+    function(err, result) {
+      if (err) {
+        reject(err);
+        return;
+      }
+      
+      // Result indicates whether the session was killed:
+      // { kill: 1 }
+      console.log('5: ' + util.inspect(result));
+      resolve();
+    });
   });
+})
+.then(function() {
+
+  process.exit(0);
 })
 .catch(function(err) {
   console.log(err);
