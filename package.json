@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "author": "benjaminvickers",
   "license": "ISC",
-  "homepage": "https://github.com/benjaminvickers/node-express-redis-session#readme",
+  "homepage": "https://github.com/thenodeguy/node-express-redis-session#readme",
   "main": "app.js",
   "scripts": {
     "setup": "node ./scripts/setup.js",
@@ -20,9 +20,9 @@
   "devDependencies": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/benjaminvickers/node-express-redis-session.git"
+    "url": "git+https://github.com/thenodeguy/node-express-redis-session.git"
   },
   "bugs": {
-    "url": "https://github.com/benjaminvickers/node-express-redis-session/issues"
+    "url": "https://github.com/thenodeguy/node-express-redis-session/issues"
   }
 }
