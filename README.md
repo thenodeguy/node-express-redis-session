@@ -1,20 +1,27 @@
 # node-express-redis-session
 A basic and lean recipe for using Redis to store sessions.
 
-Includes a setup script which will create the 'local/users' collection and insert a
-single default user:
+Demonstrates how the session can be stored in a Redis datastore, essential for
+scalable, non-RESTful web-applications that are not using session affinity.
+
+Read the <strong><code>cheatsheet.js</code></strong> for further examples of 
+how the session can be created, retrieved, updated and deleted.
+
+Includes a setup script which will create the 
+<strong><code>local/users</code></strong> collection and insert a single 
+default user:
 
 ```
 Username: admin  
 Password: admin
 ```
 
-These credentials should be used to test the username/authentication.
+These credentials should be used to log into the application.
 
 
 Requirements
 -
-You will need a running MongoDB daemon.
+You will need a running MongoDB daemon.  
 You will need a running Redis server.
 
 
@@ -42,3 +49,10 @@ $ sudo npm start
 To test in a browser
 -
 http://localhost/
+
+
+Cheatsheet
+-
+```
+$ vim cheatsheet.js
+```

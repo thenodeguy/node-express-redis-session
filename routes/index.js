@@ -13,18 +13,21 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/login', suppressLoggedInUsers, function(req, res, next) {
-  res.render('login', { message: '' });           // HERE we may still use the session for flash messages only.
+
+  // Flash messages not implemented. The flash message could be stored in the
+  // redis session for logged in users. However, to support flash messages for
+  // visitors then sessions would need to be created for them also.
+  res.render('login', { message: '' });
 });
 
 router.post('/login', suppressLoggedInUsers, function(req, res, next) {
 
-  // Parse user connection details.
   var username = req.body.username;
   var password = req.body.password;
   
-  // If this app runs behind a proxy owned by you, then use x-forwarded-for.
+  // If this app runs behind a proxy owned by you, then use 'x-forwarded-for'.
   // If not, then it there is a possibility of spoofing, so rely entirely on
-  // req.connection.remoteAddress.
+  // 'req.connection.remoteAddress'.
   //var userIP = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   var userIP = req.connection.remoteAddress;
 
@@ -74,8 +77,11 @@ router.post('/login', suppressLoggedInUsers, function(req, res, next) {
   })
   .catch(function(err) {
   
-    console.log('an error occurred: ' + err);
-    res.redirect('/login');         // HERE SET FLASH MESSENGER
+    // Implement flash messenger here. The flash message could be added to
+    // the session, and removed from the session by the subsequent consumer,
+    // e.g. /login
+    console.log(err);
+    res.redirect('/login');
     return;
   });
 });
@@ -91,11 +97,7 @@ router.get('/logout', forceLogIn, function(req, res, next) {
 
 
 function suppressLoggedInUsers(req, res, next) {
-console.log(20);
   if(res.locals.user) {
-console.log(21);
-    // User is logged in. Clear any flash messages and then redirect.         // HERE
-    //req.flash('error', null);
     res.redirect('/dashboard');
     return;
   }
@@ -105,13 +107,12 @@ console.log(21);
 
 function forceLogIn(req, res, next) {
   if(res.locals.user) {
-    // User is logged in.
+    // User is logged in. Proceed.
     next();
+    return;
   }
-  else {
-    // User is not logged in
-    res.redirect('/login');
-  }
+  // User is not logged in
+  res.redirect('/login');
 }
 
 module.exports = router;

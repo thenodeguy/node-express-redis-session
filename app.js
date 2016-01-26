@@ -1,9 +1,5 @@
 'use strict';
 
-// @TODO
-// Support for flash messaging
-// Support for signing cookies
-
 var express = require('express');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
@@ -30,6 +26,7 @@ console.log(req.headers.cookie);        // HERE DELETE
   var cookie = req.headers.cookie;
   if (!cookie) {
     res.set('Set-Cookie', 'token=visitor');
+    res.locals.token = 'visitor';
     res.locals.user = null;
     next();
     return;
@@ -40,6 +37,7 @@ console.log(req.headers.cookie);        // HERE DELETE
   if (cookie) {
     token = cookie.slice(cookie.indexOf('=') + 1);
     if (token === 'visitor') {
+      res.locals.token = 'visitor';
       res.locals.user = null;
       next();
       return;
@@ -53,6 +51,7 @@ console.log(req.headers.cookie);        // HERE DELETE
     function(err, session) {
       if (err) {
         res.set('Set-Cookie', 'token=visitor');
+        res.locals.token = 'visitor';
         res.locals.user = null;
         next();
         return;
