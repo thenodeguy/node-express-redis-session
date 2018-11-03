@@ -1,4 +1,7 @@
 # node-express-redis-session
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/bjvickers/node-express-redis-session.svg)](https://greenkeeper.io/)
+
 A basic and lean recipe for using Redis to store sessions.
 
 Demonstrates how the session can be stored in a Redis datastore, essential for
